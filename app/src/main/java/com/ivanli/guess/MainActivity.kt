@@ -20,16 +20,16 @@ class MainActivity : AppCompatActivity() {
         val n = ed_number.text.toString().toInt()
         println("number:${n}")
         val diff = sercetNumber.validate(n)
-        var msg ="你猜對了！！"
-        if(diff<0){
-            msg = "再大點！！"
+        var msg =getString(R.string.You_Got_It)
+        if(diff < 0 ){
+            msg = getString(R.string.Big)
         }else if (diff > 0){
-            msg = "再小點！！"
+            msg = getString(R.string.small)
         }
         AlertDialog.Builder(this)
             .setTitle("Message")
             .setMessage(msg)
-            .setPositiveButton("ok",null)
+            .setPositiveButton(getString(R.string.ok),null)
             .show()
 
     }
