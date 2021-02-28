@@ -3,11 +3,17 @@ package com.ivanli.guess
 import java.util.*
 
 class SecrectNumber {
-    val sercet : Int = Random().nextInt(10) + 1
+    var sercet : Int = Random().nextInt(10) + 1
     var count = 0;
 
     fun validate(number : Int) : Int{
+        count++
         return number - sercet
+    }
+
+    fun reset(){
+        sercet = Random().nextInt(10) + 1
+        count = 0
     }
 }
 

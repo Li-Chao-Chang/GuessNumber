@@ -6,4 +6,8 @@
     <string name="You_Got_It">你答對了！！</string>
     <string name="Big">再大點！！</string>
     <string name="small">再小點！！</string>
+    <string name="message">提示訊息</string>
+    <string name="Replay">重玩</string>
+    <string name="areyoursure">你確定嗎?</string>
+    <string name="Cancel">取消</string>
 </resources>
