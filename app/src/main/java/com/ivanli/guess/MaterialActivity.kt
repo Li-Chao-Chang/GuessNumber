@@ -7,9 +7,12 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.content_material.*
 
 class MaterialActivity : AppCompatActivity() {
+    private lateinit var viewMode: GuessViewModel//onCreate後生成
     val sercetNumber = SecrectNumber();
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,13 +22,29 @@ class MaterialActivity : AppCompatActivity() {
 
         counter.setText(sercetNumber.count.toString())
 
+        viewMode = ViewModelProvider(this).get(GuessViewModel::class.java)
+        viewMode.counter.observe(this, Observer {data -> //Default命名為it,data為自定義
+            counter.setText(data.toString())
+        })
+        viewMode.result.observe(this, Observer { result ->
+            var message = when(result){
+                GameResult.BIGGER -> getString(R.string.Big)
+                GameResult.SMALLER -> getString(R.string.small)
+                GameResult.NUMBER_RIGHT -> getString(R.string.You_Got_It)
+            }
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.message))
+                .setMessage(message)
+                .setPositiveButton(getString(R.string.ok),null)
+                .show()
+        })
+
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
             AlertDialog.Builder(this)
                 .setTitle(getString(R.string.Replay))
                 .setMessage(getString(R.string.areyoursure))
                 .setPositiveButton(getString(R.string.ok)) { dialog, which ->
-                    sercetNumber.reset()
-                    counter.setText(sercetNumber.count.toString())
+                    viewMode.reset()
                     ed_number.setText("")
                 }
                 .setNegativeButton(getString(R.string.Cancel),null)
@@ -33,6 +52,8 @@ class MaterialActivity : AppCompatActivity() {
         }
     }
     fun check(view : View){
+        viewMode.guess(ed_number.text.toString().toInt())
+        /*
         val n = ed_number.text.toString().toInt()
         println("number:${n}")
         val diff = sercetNumber.validate(n)
@@ -48,6 +69,6 @@ class MaterialActivity : AppCompatActivity() {
             .setMessage(msg)
             .setPositiveButton(getString(R.string.ok),null)
             .show()
-
+         */
     }
 }
