@@ -1,5 +1,7 @@
 package com.ivanli.guess
 
+import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,6 +11,9 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.room.Room
+import com.ivanli.guess.data.GameDatabase
+import com.ivanli.guess.data.Record
 import kotlinx.android.synthetic.main.content_material.*
 
 class MaterialActivity : AppCompatActivity() {
@@ -35,7 +40,13 @@ class MaterialActivity : AppCompatActivity() {
             AlertDialog.Builder(this)
                 .setTitle(getString(R.string.message))
                 .setMessage(message)
-                .setPositiveButton(getString(R.string.ok),null)
+                .setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                    if (message == getString(R.string.You_Got_It)){
+                        var intent = Intent(this,RecordActivity::class.java)
+                        intent.putExtra("COUNTER",counter.text)
+                        startActivity(intent)
+                    }
+                }
                 .show()
         })
 
@@ -49,6 +60,12 @@ class MaterialActivity : AppCompatActivity() {
                 }
                 .setNegativeButton(getString(R.string.Cancel),null)
                 .show()
+        }
+        AsyncTask.execute{
+            var list = GameDatabase.getInstance(this)?.recordDao()?.getAll()
+            list?.forEach{
+                Log.d("MaterialActivity","record:${it.id}${it.nickname}${it.counter}")
+            }
         }
     }
     fun check(view : View){
